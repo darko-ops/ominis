@@ -52,7 +52,7 @@
 
 /* A faint olive wash behind glass panels, so the blur has something to catch. */
 @utility glow {
-  background-image: radial-gradient(70% 90% at 82% 45%, var(--olive-dim), transparent 68%);
+  background-image: radial-gradient(70% 90% at 82% 45%, rgba(92, 102, 52, 0.22), transparent 70%);
 }
 
 html {
