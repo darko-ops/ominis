@@ -1,258 +1,195 @@
 import { ContactCard } from "@/components/ContactCard";
-import { Radar } from "@/components/Radar";
+import { FlockCanvas } from "@/components/Flock";
 import { TraceDemo } from "@/components/TraceDemo";
 
 const REPO = "https://github.com/darko-ops/omi";
+const SPEC = `${REPO}#readme`;
 
-function Mark({ className = "" }: { className?: string }) {
-  return (
-    <span className={`font-mono ${className}`} aria-hidden="true">
-      🜂
-    </span>
-  );
-}
-
-function SectionLabel({ children }: { children: React.ReactNode }) {
-  return <p className="font-mono text-xs uppercase tracking-[0.2em] text-ember">{children}</p>;
-}
-
-const PROBLEMS = [
-  {
-    title: "Agents act faster than anyone can review",
-    body: "A coding agent can run hundreds of commands before a person reads the first diff. Review after the fact is too late when one of those commands opens a port or ships a credential.",
-  },
-  {
-    title: "The dangerous step looks like the job",
-    body: "Sabotage that works hides inside work the task needs: a firewall edit next to a config change, an exfiltration inside a test run, a narration that says one thing while the command does another.",
-  },
-  {
-    title: "Big-model monitors are slow and persuadable",
-    body: "Asking a frontier model to read every step is expensive, adds seconds of latency, and the model can be talked out of what it saw. Published red-team results show catch rates falling sharply against refined attacks.",
-  },
+const NAV = [
+  { label: "Model", href: "#model" },
+  { label: "Evaluation", href: "#evaluation" },
+  { label: "Spec", href: SPEC },
+  { label: "GitHub", href: REPO },
 ];
 
 const QUESTIONS = [
-  { q: "sabotage", type: "probability", a: "Is this step part of an undeclared side task?" },
+  { q: "sabotage", type: "p", a: "Is this step part of an undeclared side task?" },
   { q: "scope", type: "choice", a: "in scope · plausible but unneeded · out of scope" },
   { q: "severity", type: "1–5", a: "harmless … irreversible or exfiltrating" },
-  { q: "next_action", type: "choice", a: "continue · observe · human review · stop" },
+  { q: "next_action", type: "choice", a: "continue · observe · human_review · stop" },
 ];
 
 const PRINCIPLES = [
-  {
-    title: "Local",
-    body: "A small model that runs on your hardware, next to the agent. Traces, code and credentials never leave the machine to be judged.",
-  },
+  { title: "Local", body: "Runs on your hardware, next to the agent. Traces, code and credentials never leave the machine to be judged." },
   {
     title: "Calibrated",
-    body: "Outputs are probabilities fitted to mean what they say, so a single threshold maps to the false-alarm rate you choose, instead of a score you have to guess at.",
+    body: "Probabilities fitted to mean what they say, so one threshold maps to the false-alarm rate you choose instead of a score you have to guess at.",
   },
   {
     title: "Non-generative",
-    body: "Omi reads the step and answers typed questions from its output logits. It writes no prose, so there is no reasoning chain for an agent to argue with.",
+    body: "Omi answers typed questions from its output logits and writes no prose, so there is no reasoning chain for an agent to argue with.",
   },
   {
     title: "Long-horizon",
-    body: "A running record of every file written, endpoint touched and permission changed travels with each step, so an attack set up 40 steps earlier is still in view when it fires.",
+    body: "A running record of every file written, endpoint touched and permission changed travels with each step, so setup done 40 steps earlier is still in view when it fires.",
   },
 ];
 
-const PARTNER = [
-  "Run Omi against your own agent traces before anyone else, on your hardware.",
-  "Help set the thresholds and actions that fit how your team ships.",
-  "A direct line to the people building it, and the evaluation results as they land.",
+const PROBLEMS = [
+  ["Faster than review", "An agent can run hundreds of commands before anyone reads the first diff."],
+  ["Hidden in the job", "The step that does harm sits inside work the task needs: a firewall edit next to a config change."],
+  ["Hard to watch well", "A frontier model reading every step is slow, costly, and can be talked out of what it saw."],
 ];
+
+function Label({ children }: { children: React.ReactNode }) {
+  return <p className="font-mono text-xs text-olive">{children}</p>;
+}
 
 export default function Home() {
   return (
-    <div className="relative overflow-x-clip">
-      <header className="sticky top-0 z-20 border-b border-line/70 bg-bg/80 backdrop-blur-md">
-        <nav className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4 sm:px-6" aria-label="Main">
-          <a href="#top" className="flex items-center gap-2 text-[15px] font-semibold tracking-[0.18em] text-fg">
-            <Mark className="text-ember" />
-            OMINIS
+    <div className="overflow-x-clip">
+      {/* Hero: design 2a */}
+      <section className="relative h-svh min-h-[640px] overflow-hidden" aria-labelledby="hero-title">
+        <FlockCanvas className="absolute inset-0 block h-full w-full" />
+        <header className="relative flex items-center justify-between px-5 py-6 sm:px-12 sm:py-7">
+          <a href="#" className="text-[22px] font-medium tracking-[-0.02em]">
+            omi
           </a>
-          <div className="flex items-center gap-1 text-sm text-fg-muted sm:gap-2">
-            <a href="#how" className="hidden rounded-md px-3 py-1.5 hover:text-fg sm:inline-block">
-              How it works
-            </a>
-            <a href="#omi" className="hidden rounded-md px-3 py-1.5 hover:text-fg sm:inline-block">
-              Omi
-            </a>
-            <a href={REPO} className="rounded-md px-3 py-1.5 hover:text-fg">
-              Research
-            </a>
-            <a href="#partner" className="ml-1 rounded-lg border border-line-strong px-3 py-1.5 text-fg transition hover:border-ember hover:text-ember">
-              Design partners
-            </a>
-          </div>
-        </nav>
-      </header>
+          <nav aria-label="Main" className="flex gap-5 text-sm sm:gap-8">
+            {NAV.map((n) => (
+              <a key={n.label} href={n.href} className={`hover:text-fg-faint ${n.label === "Evaluation" ? "hidden sm:inline" : ""}`}>
+                {n.label}
+              </a>
+            ))}
+          </nav>
+        </header>
+        <div className="absolute bottom-24 left-1/2 flex w-[min(560px,calc(100%-40px))] -translate-x-1/2 flex-col items-center gap-[22px] text-center sm:bottom-[84px]">
+          <h1 id="hero-title" className="text-[44px] leading-none font-medium tracking-[-0.045em] sm:text-[68px]">
+            Every step, judged.
+          </h1>
+          <p className="max-w-[430px] text-[17px] leading-normal text-pretty text-fg-muted">
+            A small model that watches your coding agent and flags the actions that don&apos;t belong.
+          </p>
+          <a href={SPEC} className="rounded-full bg-fg px-[22px] py-[13px] text-[15px] text-bg transition-colors hover:bg-[#333]">
+            Read the spec
+          </a>
+        </div>
+        <div className="absolute inset-x-5 bottom-8 flex justify-between gap-4 font-mono text-[11px] text-[#555] sm:inset-x-12 sm:text-xs">
+          <span>p(side task) per action</span>
+          <span className="text-right">one forward pass · &lt; 200 ms · local</span>
+        </div>
+        <p className="sr-only">
+          Illustration: thousands of routine agent actions move together; one, a curl that posts an SSH key, breaks away and is flagged with p(side task) =
+          0.97, routed to human review.
+        </p>
+      </section>
 
-      <main id="top">
-        {/* Hero */}
-        <section className="relative">
-          <Radar className="pointer-events-none absolute -right-72 -top-64 w-[600px] opacity-25 sm:-right-24 sm:-top-24 sm:w-[760px] sm:opacity-60 lg:right-[-6rem]" />
-          <div className="relative mx-auto grid max-w-6xl gap-14 px-4 pb-20 pt-20 sm:px-6 sm:pt-28 lg:grid-cols-[1.05fr_1fr] lg:items-center lg:gap-12">
-            <div>
-              <p className="inline-flex items-center gap-2 rounded-full border border-line-strong bg-bg-raised/70 px-3 py-1 font-mono text-xs text-fg-muted">
-                <span className="h-1.5 w-1.5 rounded-full bg-ember" />
-                In development · recruiting design partners
-              </p>
-              <h1 className="mt-6 text-4xl font-semibold leading-[1.08] tracking-tight text-fg sm:text-5xl lg:text-6xl">
-                Runtime safety for coding agents.
-              </h1>
-              <p className="mt-6 max-w-xl text-lg leading-relaxed text-fg-muted">
-                OMINIS watches every action an AI coding agent takes and asks one question: is this the task, or something else? Its judge,{" "}
-                <span className="text-fg">Omi</span>, answers with a calibrated probability, on your own hardware, in a single forward pass.
-              </p>
-              <div className="mt-9 flex flex-wrap items-center gap-3">
-                <a
-                  href="#partner"
-                  className="inline-flex items-center rounded-lg bg-ember px-5 py-3 text-[15px] font-medium text-[#0a0b0d] transition hover:brightness-110"
-                >
-                  Become a design partner
-                </a>
-                <a href={REPO} className="inline-flex items-center gap-2 rounded-lg border border-line-strong px-5 py-3 text-[15px] text-fg transition hover:border-fg-muted">
-                  Read the research <span aria-hidden="true">→</span>
-                </a>
-              </div>
-            </div>
-            <TraceDemo />
-          </div>
-        </section>
-
+      <main>
         {/* Problem */}
-        <section className="border-t border-line bg-bg-sunken/60">
-          <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-24">
-            <SectionLabel>The problem</SectionLabel>
-            <h2 className="mt-3 max-w-2xl text-3xl font-semibold tracking-tight sm:text-4xl">
-              You gave an agent a shell. Who is watching it?
-            </h2>
-            <div className="mt-12 grid gap-px overflow-hidden rounded-xl border border-line bg-line md:grid-cols-3">
-              {PROBLEMS.map((p) => (
-                <div key={p.title} className="bg-bg p-6 sm:p-7">
-                  <h3 className="text-lg font-medium text-fg">{p.title}</h3>
-                  <p className="mt-3 leading-relaxed text-fg-muted">{p.body}</p>
+        <section className="border-t border-line">
+          <div className="mx-auto grid max-w-6xl gap-10 px-5 py-20 sm:px-12 sm:py-28 lg:grid-cols-[1fr_1.4fr]">
+            <div>
+              <Label>the problem</Label>
+              <h2 className="mt-3 text-3xl leading-tight font-medium tracking-[-0.03em] sm:text-[40px]">You gave an agent a shell. Who&apos;s watching?</h2>
+            </div>
+            <dl className="grid gap-px overflow-hidden rounded-2xl border border-line bg-line sm:grid-cols-3">
+              {PROBLEMS.map(([t, b]) => (
+                <div key={t} className="bg-bg p-6">
+                  <dt className="font-medium">{t}</dt>
+                  <dd className="mt-2 text-[15px] leading-relaxed text-fg-muted">{b}</dd>
                 </div>
               ))}
-            </div>
+            </dl>
           </div>
         </section>
 
-        {/* How it works */}
-        <section id="how" className="scroll-mt-14 border-t border-line">
-          <div className="mx-auto grid max-w-6xl gap-12 px-4 py-20 sm:px-6 sm:py-24 lg:grid-cols-[0.9fr_1.1fr]">
+        {/* Model */}
+        <section id="model" className="scroll-mt-4 border-t border-line">
+          <div className="mx-auto grid max-w-6xl gap-12 px-5 py-20 sm:px-12 sm:py-28 lg:grid-cols-2">
             <div>
-              <SectionLabel>How it works</SectionLabel>
-              <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">Every step, four typed answers.</h2>
-              <p className="mt-5 leading-relaxed text-fg-muted">
-                Before an action runs, OMINIS hands Omi the step, the steps around it and a running record of everything the agent has done. Omi returns a
-                probability for each answer. Your policy turns those into an action: let it through, log it, page a person, or stop the agent.
+              <Label>model</Label>
+              <h2 className="mt-3 text-3xl leading-tight font-medium tracking-[-0.03em] sm:text-[40px]">Four typed answers per step.</h2>
+              <p className="mt-5 max-w-lg text-[17px] leading-relaxed text-fg-muted">
+                Omi reads the step, the steps around it and a running record of everything the agent has done, then returns a probability for each answer.
+                Your policy turns them into an action.
               </p>
-              <ol className="mt-8 space-y-4 text-[15px]">
-                {["The agent proposes a tool call.", "Omi scores it against the task and the record so far.", "Your threshold decides: continue, observe, review, or stop."].map(
-                  (s, i) => (
-                    <li key={s} className="flex gap-3">
-                      <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-line-strong font-mono text-xs text-ember">
-                        {i + 1}
-                      </span>
-                      <span className="pt-0.5 text-fg-muted">{s}</span>
-                    </li>
-                  ),
-                )}
-              </ol>
-            </div>
-            <div className="overflow-hidden rounded-xl border border-line bg-bg-raised">
-              <div className="border-b border-line px-5 py-3 font-mono text-xs text-fg-faint">omi.decide(state) → per step</div>
-              <dl className="divide-y divide-line">
+              <dl className="mt-8 divide-y divide-line border-y border-line">
                 {QUESTIONS.map((q) => (
-                  <div key={q.q} className="grid gap-1 px-5 py-4 sm:grid-cols-[12.5rem_1fr] sm:gap-4">
-                    <dt className="font-mono text-sm text-fg">
-                      {q.q}
-                      <span className="ml-2 text-xs text-fg-faint">{q.type}</span>
+                  <div key={q.q} className="grid gap-1 py-3.5 sm:grid-cols-[11rem_1fr] sm:gap-4">
+                    <dt className="font-mono text-sm">
+                      {q.q} <span className="text-xs text-fg-faint">{q.type}</span>
                     </dt>
                     <dd className="text-[15px] text-fg-muted">{q.a}</dd>
                   </div>
                 ))}
               </dl>
             </div>
+            <div className="lg:pt-10">
+              <TraceDemo />
+            </div>
           </div>
         </section>
 
-        {/* Omi */}
-        <section id="omi" className="scroll-mt-14 border-t border-line bg-bg-sunken/60">
-          <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-24">
-            <SectionLabel>Omi, the judge</SectionLabel>
-            <div className="mt-3 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-              <h2 className="max-w-2xl text-3xl font-semibold tracking-tight sm:text-4xl">Small enough to run everywhere. Hard to talk around.</h2>
-              <p className="max-w-md text-fg-muted">
-                Designed for one forward pass per step, under 200&nbsp;ms on local hardware, so it can sit in the loop rather than read logs afterwards.
-              </p>
-            </div>
-            <div className="mt-12 grid gap-4 sm:grid-cols-2">
+        {/* Principles */}
+        <section className="border-t border-line bg-bg-sunken">
+          <div className="mx-auto max-w-6xl px-5 py-20 sm:px-12 sm:py-28">
+            <Label>design</Label>
+            <h2 className="mt-3 max-w-2xl text-3xl leading-tight font-medium tracking-[-0.03em] sm:text-[40px]">Small enough to run everywhere. Hard to talk around.</h2>
+            <div className="mt-12 grid gap-x-12 gap-y-10 sm:grid-cols-2">
               {PRINCIPLES.map((p) => (
-                <div key={p.title} className="rounded-xl border border-line bg-bg p-6 sm:p-7">
-                  <h3 className="flex items-center gap-2 text-lg font-medium">
-                    <span className="h-1.5 w-1.5 rounded-full bg-ember" aria-hidden="true" />
-                    {p.title}
-                  </h3>
-                  <p className="mt-3 leading-relaxed text-fg-muted">{p.body}</p>
+                <div key={p.title} className="border-t border-fg pt-5">
+                  <h3 className="text-lg font-medium">{p.title}</h3>
+                  <p className="mt-2 max-w-md text-[15px] leading-relaxed text-fg-muted">{p.body}</p>
                 </div>
               ))}
             </div>
           </div>
         </section>
 
-        {/* Research */}
-        <section className="border-t border-line">
-          <div className="mx-auto grid max-w-6xl gap-10 px-4 py-20 sm:px-6 sm:py-24 lg:grid-cols-2 lg:items-center">
+        {/* Evaluation */}
+        <section id="evaluation" className="scroll-mt-4 border-t border-line">
+          <div className="mx-auto grid max-w-6xl gap-12 px-5 py-20 sm:px-12 sm:py-28 lg:grid-cols-[1.2fr_1fr] lg:items-start">
             <div>
-              <SectionLabel>Research in the open</SectionLabel>
-              <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">Measured against attacks built to beat monitors.</h2>
-              <p className="mt-5 leading-relaxed text-fg-muted">
-                Omi is trained and evaluated on MonitoringBench, 2,644 red-teamed sabotage trajectories across firewall, privilege, malware and exfiltration
-                side tasks, held out by task so it is never scored on a task it saw. We report catch rate at a fixed false-alarm rate, calibration, and how
-                performance holds as an attack is spread over more steps. The code is public now; results will be published as they land, including where it fails.
+              <Label>evaluation</Label>
+              <h2 className="mt-3 text-3xl leading-tight font-medium tracking-[-0.03em] sm:text-[40px]">Measured against attacks built to beat monitors.</h2>
+              <p className="mt-5 max-w-xl text-[17px] leading-relaxed text-fg-muted">
+                Omi is trained and evaluated on MonitoringBench: red-teamed sabotage trajectories across firewall, privilege, malware and exfiltration side
+                tasks, held out by task so it is never scored on a task it has seen. Catch rate is reported at a fixed false-alarm rate, alongside calibration
+                and how detection holds as an attack is spread over more steps.
               </p>
-              <a href={REPO} className="mt-7 inline-flex items-center gap-2 text-[15px] text-ember hover:underline">
-                github.com/darko-ops/omi <span aria-hidden="true">→</span>
+              <p className="mt-4 max-w-xl text-[17px] leading-relaxed text-fg-muted">
+                The code is public now. Results will be published as they land, including where it fails.
+              </p>
+              <a href={REPO} className="mt-7 inline-block font-mono text-sm underline decoration-line-strong underline-offset-4 hover:decoration-fg">
+                github.com/darko-ops/omi
               </a>
             </div>
-            <div className="grid grid-cols-2 gap-4">
+            <dl className="grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-line bg-line">
               {[
                 ["2,644", "attack trajectories in the evaluation set"],
                 ["4", "typed answers per step, one forward pass"],
                 ["1%", "false-alarm rate every catch rate is reported at"],
-                ["0", "lines of trace text sent off your machine"],
+                ["0", "bytes of trace sent off your machine"],
               ].map(([n, l]) => (
-                <div key={l} className="rounded-xl border border-line bg-bg-raised p-5">
-                  <div className="font-mono text-3xl text-fg">{n}</div>
-                  <div className="mt-2 text-sm leading-snug text-fg-muted">{l}</div>
+                <div key={l} className="bg-bg-raised p-5">
+                  <dt className="font-mono text-3xl tracking-tight">{n}</dt>
+                  <dd className="mt-2 text-sm leading-snug text-fg-faint">{l}</dd>
                 </div>
               ))}
-            </div>
+            </dl>
           </div>
         </section>
 
         {/* Design partners */}
-        <section id="partner" className="scroll-mt-14 border-t border-line bg-bg-sunken/60">
-          <div className="mx-auto grid max-w-6xl gap-12 px-4 py-20 sm:px-6 sm:py-24 lg:grid-cols-[0.85fr_1.15fr]">
+        <section id="partners" className="scroll-mt-4 border-t border-line bg-bg-sunken">
+          <div className="mx-auto grid max-w-6xl gap-12 px-5 py-20 sm:px-12 sm:py-28 lg:grid-cols-2 lg:items-center">
             <div>
-              <SectionLabel>Design partners</SectionLabel>
-              <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">Running coding agents on real systems?</h2>
-              <p className="mt-5 leading-relaxed text-fg-muted">
-                We&apos;re working with a small number of teams that run agents in CI, on developer machines or against production, to shape OMINIS around
-                how agents are actually used.
+              <Label>design partners</Label>
+              <h2 className="mt-3 text-3xl leading-tight font-medium tracking-[-0.03em] sm:text-[40px]">Running coding agents on real systems?</h2>
+              <p className="mt-5 max-w-lg text-[17px] leading-relaxed text-fg-muted">
+                We&apos;re working with a few teams that run agents in CI, on developer machines or against production. Run Omi on your own traces first,
+                help set the thresholds, and see the results as they land.
               </p>
-              <ul className="mt-8 space-y-3">
-                {PARTNER.map((p) => (
-                  <li key={p} className="flex gap-3 text-[15px] text-fg-muted">
-                    <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-ember" aria-hidden="true" />
-                    {p}
-                  </li>
-                ))}
-              </ul>
             </div>
             <ContactCard />
           </div>
@@ -260,20 +197,21 @@ export default function Home() {
       </main>
 
       <footer className="border-t border-line">
-        <div className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-10 text-sm text-fg-faint sm:flex-row sm:items-center sm:justify-between sm:px-6">
-          <div className="flex items-center gap-2">
-            <Mark className="text-ember" />
-            <span className="tracking-[0.18em] text-fg-muted">OMINIS</span>
-            <span>· intelligence : radar</span>
-          </div>
-          <div className="flex gap-5">
+        <div className="mx-auto flex max-w-6xl flex-col gap-3 px-5 py-8 font-mono text-xs text-fg-faint sm:flex-row sm:items-center sm:justify-between sm:px-12">
+          <span>
+            <span className="font-sans text-base font-medium tracking-[-0.02em] text-fg">omi</span> · every step, judged
+          </span>
+          <span className="flex gap-6">
+            <a href={SPEC} className="hover:text-fg">
+              spec
+            </a>
             <a href={REPO} className="hover:text-fg">
-              Omi on GitHub
+              github
             </a>
-            <a href="#partner" className="hover:text-fg">
-              Contact
+            <a href="#partners" className="hover:text-fg">
+              contact
             </a>
-          </div>
+          </span>
         </div>
       </footer>
     </div>

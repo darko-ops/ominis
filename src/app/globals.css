@@ -1,20 +1,22 @@
 @import "tailwindcss";
 
+/* Design 2a: warm off-white, black type, olive for the flock, red only for a flagged action. */
 :root {
-  color-scheme: dark;
-  --bg: #0a0b0d;
-  --bg-raised: #111317;
-  --bg-sunken: #07080a;
-  --line: #1f232a;
-  --line-strong: #2c313a;
-  --fg: #ecebe8;
-  --fg-muted: #9a9ea8;
-  --fg-faint: #636874;
-  --ember: #ff7a3d;
-  --ember-dim: #ff7a3d26;
-  --ok: #49c98a;
-  --warn: #e5b94e;
-  --bad: #ff5d5d;
+  color-scheme: light;
+  --bg: #fafaf8;
+  --bg-raised: #ffffff;
+  --bg-sunken: #f2f1ec;
+  --line: #e4e3dd;
+  --line-strong: #cfcec7;
+  --fg: #0b0b0b;
+  --fg-muted: #333333;
+  --fg-faint: #5f5f5c;
+  --olive: #5c6634;
+  --olive-dim: #5c66341f;
+  --flag: #d6221c;
+  --ok: #5c6634;
+  --warn: #9a6b12;
+  --bad: #d6221c;
 }
 
 @theme inline {
@@ -26,13 +28,14 @@
   --color-fg: var(--fg);
   --color-fg-muted: var(--fg-muted);
   --color-fg-faint: var(--fg-faint);
-  --color-ember: var(--ember);
-  --color-ember-dim: var(--ember-dim);
+  --color-olive: var(--olive);
+  --color-olive-dim: var(--olive-dim);
+  --color-flag: var(--flag);
   --color-ok: var(--ok);
   --color-warn: var(--warn);
   --color-bad: var(--bad);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, Menlo, monospace;
 }
 
 html {
@@ -42,26 +45,24 @@ html {
 body {
   background: var(--bg);
   color: var(--fg);
-  font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
 }
 
-::selection {
-  background: var(--ember);
-  color: #0a0b0d;
+/* Base styles live in a layer so Tailwind utilities (e.g. text-bg on a black pill) win. */
+@layer base {
+  a {
+    color: inherit;
+  }
 }
 
-@keyframes sweep {
-  to {
-    transform: rotate(360deg);
-  }
+::selection {
+  background: var(--fg);
+  color: var(--bg);
 }
 
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
-  }
-  .animate-sweep {
-    animation: none !important;
   }
 }
