@@ -127,6 +127,25 @@ function draw(cv: HTMLCanvasElement, f: Flock, t: number, mono: string) {
   ctx.arc(ox, oy, 14, 0, 7);
   ctx.stroke();
 
+  // Translucent off-white card behind the label so it stays legible when the flock passes under it.
+  const card = (tx: number, firstBaseline: number, lineH: number, fontPx: number, align: "left" | "right") => {
+    let wmax = 0;
+    for (const [wt, s] of lines) {
+      ctx.font = `${wt} ${fontPx}px ${mono}`;
+      wmax = Math.max(wmax, ctx.measureText(s).width);
+    }
+    const pad = 8;
+    const x = align === "right" ? tx - wmax - pad : tx - pad;
+    const y = firstBaseline - fontPx - pad + 1;
+    const w = wmax + pad * 2;
+    const hgt = (lines.length - 1) * lineH + fontPx + pad * 2;
+    ctx.fillStyle = "rgba(250,250,248,0.88)";
+    ctx.beginPath();
+    if (typeof ctx.roundRect === "function") ctx.roundRect(x, y, w, hgt, 6);
+    else ctx.rect(x, y, w, hgt);
+    ctx.fill();
+  };
+
   const p = (0.5 + 0.47 * a).toFixed(2);
   const lines: [string, string][] = [
     ["500", "step 41 · bash"],
@@ -143,6 +162,7 @@ function draw(cv: HTMLCanvasElement, f: Flock, t: number, mono: string) {
     ctx.lineTo(tx, ly - 30);
     ctx.stroke();
     ctx.textAlign = "left";
+    card(tx, ly - 12, 15, 11, "left");
     lines.forEach(([wt, s], i) => {
       ctx.fillStyle = RED;
       ctx.font = `${wt} 11px ${mono}`;
@@ -159,6 +179,7 @@ function draw(cv: HTMLCanvasElement, f: Flock, t: number, mono: string) {
     ctx.lineTo(ox + 70 * d, ly);
     ctx.stroke();
     const tx = ox + 78 * d;
+    card(tx, ly - 10, 16, 12, flip ? "right" : "left");
     lines.forEach(([wt, s], i) => {
       ctx.fillStyle = RED;
       ctx.font = `${wt} 12px ${mono}`;
