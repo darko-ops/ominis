@@ -139,11 +139,26 @@ function draw(cv: HTMLCanvasElement, f: Flock, t: number, mono: string) {
     const y = firstBaseline - fontPx - pad + 1;
     const w = wmax + pad * 2;
     const hgt = (lines.length - 1) * lineH + fontPx + pad * 2;
-    ctx.fillStyle = "rgba(250,250,248,0.88)";
-    ctx.beginPath();
-    if (typeof ctx.roundRect === "function") ctx.roundRect(x, y, w, hgt, 6);
-    else ctx.rect(x, y, w, hgt);
+    const shape = () => {
+      ctx.beginPath();
+      if (typeof ctx.roundRect === "function") ctx.roundRect(x, y, w, hgt, 7);
+      else ctx.rect(x, y, w, hgt);
+    };
+    // Frosted glass: blur what's already drawn under the card, then a thin milky wash and a hairline edge.
+    if ("filter" in ctx) {
+      ctx.save();
+      shape();
+      ctx.clip();
+      ctx.filter = "blur(5px)";
+      ctx.drawImage(cv, x * dpr, y * dpr, w * dpr, hgt * dpr, x, y, w, hgt);
+      ctx.restore();
+    }
+    shape();
+    ctx.fillStyle = "rgba(250,250,248,0.62)";
     ctx.fill();
+    ctx.strokeStyle = "rgba(255,255,255,0.7)";
+    ctx.lineWidth = 1;
+    ctx.stroke();
   };
 
   const p = (0.5 + 0.47 * a).toFixed(2);
