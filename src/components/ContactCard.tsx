@@ -15,7 +15,7 @@ const HREF = `mailto:${EMAIL}?subject=${encodeURIComponent(SUBJECT)}&body=${enco
 
 export function ContactCard() {
   return (
-    <div className="rounded-2xl border border-line bg-bg-raised p-6 sm:p-8">
+    <div className="glass rounded-2xl p-6 sm:p-8">
       <p className="font-mono text-xs text-fg-faint">tell us about your setup</p>
       <ul className="mt-4 space-y-2.5 text-[15px] text-fg-muted">
         {["Which agents you run, and how many", "Where they act: CI, developer machines, production", "What you'd most want a monitor to catch"].map((q) => (

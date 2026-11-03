@@ -25,7 +25,7 @@ function tone(p: number) {
 
 export function TraceDemo() {
   return (
-    <figure className="overflow-hidden rounded-2xl border border-line bg-bg-raised">
+    <figure className="glass overflow-hidden rounded-2xl">
       <div className="flex items-center justify-between gap-3 border-b border-line px-5 py-3 font-mono text-xs text-fg-faint">
         <span>agent session · task: &quot;add retry logic to the upload client&quot;</span>
         <span className="uppercase tracking-widest">illustrative</span>

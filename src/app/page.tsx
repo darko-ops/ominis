@@ -86,15 +86,15 @@ export default function Home() {
 
       <main>
         {/* Problem */}
-        <section className="border-t border-line">
+        <section className="glow border-t border-line">
           <div className="mx-auto grid max-w-6xl gap-10 px-5 py-20 sm:px-12 sm:py-28 lg:grid-cols-[1fr_1.4fr]">
             <div>
               <Label>the problem</Label>
               <h2 className="mt-3 text-3xl leading-tight font-medium tracking-[-0.03em] sm:text-[40px]">You gave an agent a shell. Who&apos;s watching?</h2>
             </div>
-            <dl className="grid gap-px overflow-hidden rounded-2xl border border-line bg-line sm:grid-cols-3">
+            <dl className="glass grid divide-y divide-line/70 overflow-hidden rounded-2xl sm:grid-cols-3 sm:divide-x sm:divide-y-0">
               {PROBLEMS.map(([t, b]) => (
-                <div key={t} className="bg-bg p-6">
+                <div key={t} className="p-6">
                   <dt className="font-medium">{t}</dt>
                   <dd className="mt-2 text-[15px] leading-relaxed text-fg-muted">{b}</dd>
                 </div>
@@ -104,7 +104,7 @@ export default function Home() {
         </section>
 
         {/* Model */}
-        <section id="model" className="scroll-mt-4 border-t border-line">
+        <section id="model" className="glow scroll-mt-4 border-t border-line">
           <div className="mx-auto grid max-w-6xl gap-12 px-5 py-20 sm:px-12 sm:py-28 lg:grid-cols-2">
             <div>
               <Label>model</Label>
@@ -147,7 +147,7 @@ export default function Home() {
         </section>
 
         {/* Evaluation */}
-        <section id="evaluation" className="scroll-mt-4 border-t border-line">
+        <section id="evaluation" className="glow scroll-mt-4 border-t border-line">
           <div className="mx-auto grid max-w-6xl gap-12 px-5 py-20 sm:px-12 sm:py-28 lg:grid-cols-[1.2fr_1fr] lg:items-start">
             <div>
               <Label>evaluation</Label>
@@ -164,14 +164,14 @@ export default function Home() {
                 github.com/darko-ops/omi
               </a>
             </div>
-            <dl className="grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-line bg-line">
+            <dl className="glass grid grid-cols-2 overflow-hidden rounded-2xl [&>div:nth-child(-n+2)]:border-b [&>div:nth-child(odd)]:border-r [&>div]:border-line/70">
               {[
                 ["2,644", "attack trajectories in the evaluation set"],
                 ["4", "typed answers per step, one forward pass"],
                 ["1%", "false-alarm rate every catch rate is reported at"],
                 ["0", "bytes of trace sent off your machine"],
               ].map(([n, l]) => (
-                <div key={l} className="bg-bg-raised p-5">
+                <div key={l} className="p-5">
                   <dt className="font-mono text-3xl tracking-tight">{n}</dt>
                   <dd className="mt-2 text-sm leading-snug text-fg-faint">{l}</dd>
                 </div>
@@ -181,7 +181,7 @@ export default function Home() {
         </section>
 
         {/* Design partners */}
-        <section id="partners" className="scroll-mt-4 border-t border-line bg-bg-sunken">
+        <section id="partners" className="glow scroll-mt-4 border-t border-line bg-bg-sunken">
           <div className="mx-auto grid max-w-6xl gap-12 px-5 py-20 sm:px-12 sm:py-28 lg:grid-cols-2 lg:items-center">
             <div>
               <Label>design partners</Label>
