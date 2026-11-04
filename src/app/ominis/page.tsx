@@ -20,13 +20,15 @@ export default function Ominis() {
     <section className="relative h-svh min-h-[640px] overflow-hidden" aria-labelledby="ominis-title">
       <FlockCanvas outlier={false} className="absolute inset-0 block h-full w-full" />
       <header className="relative flex items-center justify-between px-5 py-6 sm:px-12 sm:py-7">
-        <a href="/ominis" className="text-[22px] font-medium tracking-[-0.02em]">
-          ominis
-        </a>
-        <nav aria-label="Main" className="flex gap-5 text-sm sm:gap-8">
-          <Link href="/" className="hover:text-fg-faint">
-            Omi
+        <span className="flex items-baseline gap-2">
+          <a href="/ominis" className="text-[22px] font-medium tracking-[-0.02em]">
+            ominis
+          </a>
+          <Link href="/" className="text-xs text-fg-faint transition-colors hover:text-fg">
+            omi
           </Link>
+        </span>
+        <nav aria-label="Main" className="flex gap-5 text-sm sm:gap-8">
           <a href={`mailto:${CONTACT}`} className="hover:text-fg-faint">
             Contact
           </a>
