@@ -47,9 +47,7 @@ export default function Ominis() {
       </div>
       <div className="absolute inset-x-5 bottom-8 flex justify-between gap-4 font-mono text-[11px] text-[#555] sm:inset-x-12 sm:text-xs">
         <span>ominis</span>
-        <a href={`mailto:${CONTACT}`} className="text-right hover:text-fg">
-          {CONTACT}
-        </a>
+        <span className="text-right">exploration through intuition</span>
       </div>
       <p className="sr-only">Illustration: thousands of agent actions moving together as one flock.</p>
     </section>
