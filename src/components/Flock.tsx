@@ -54,7 +54,7 @@ function pos(seed: number, B: Bird, t: number, out: { x: number; y: number; z: n
   out.z = z3;
 }
 
-function draw(cv: HTMLCanvasElement, f: Flock, t: number, mono: string) {
+function draw(cv: HTMLCanvasElement, f: Flock, t: number, mono: string, outlier = true) {
   const dpr = window.devicePixelRatio || 1;
   const w = cv.clientWidth,
     h = cv.clientHeight;
@@ -81,7 +81,7 @@ function draw(cv: HTMLCanvasElement, f: Flock, t: number, mono: string) {
     pos(f.seed, f.birds[i], t, o);
     let px = cx + o.x * sc,
       py = cy + o.y * sc;
-    if (i === 0) {
+    if (i === 0 && outlier) {
       const k = 0.5 - 0.5 * Math.cos(t * 0.35);
       px += k * (compact ? 70 : 150);
       py -= k * (compact ? 40 : 70);
@@ -112,7 +112,7 @@ function draw(cv: HTMLCanvasElement, f: Flock, t: number, mono: string) {
   ctx.lineWidth = 1.4;
   ctx.stroke(near);
 
-  if (!ox) return;
+  if (!ox || !outlier) return;
   const k = 0.5 - 0.5 * Math.cos(t * 0.35);
   if (k <= 0.35) return;
   const a = Math.min(1, (k - 0.35) / 0.25);
@@ -205,7 +205,11 @@ function draw(cv: HTMLCanvasElement, f: Flock, t: number, mono: string) {
   ctx.globalAlpha = 1;
 }
 
-export function FlockCanvas({ className = "" }: { className?: string }) {
+/**
+ * `outlier` (default true) is the flagged action: one bird peels off, turns red
+ * and gets its p(side task) label. Off, the murmuration is the whole picture.
+ */
+export function FlockCanvas({ className = "", outlier = true }: { className?: string; outlier?: boolean }) {
   const ref = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -220,12 +224,12 @@ export function FlockCanvas({ className = "" }: { className?: string }) {
 
     if (reduced) {
       // Two frames so motion trails exist; t chosen with the outlier flagged.
-      draw(cv, flock, 7.98, mono);
-      draw(cv, flock, 8.0, mono);
+      draw(cv, flock, 7.98, mono, outlier);
+      draw(cv, flock, 8.0, mono, outlier);
       const onResize = () => {
         flock = makeFlock(cv.clientWidth < 640 ? 1400 : 2400, 3 * 17.3);
-        draw(cv, flock, 7.98, mono);
-        draw(cv, flock, 8.0, mono);
+        draw(cv, flock, 7.98, mono, outlier);
+        draw(cv, flock, 8.0, mono, outlier);
       };
       window.addEventListener("resize", onResize);
       return () => window.removeEventListener("resize", onResize);
@@ -233,10 +237,10 @@ export function FlockCanvas({ className = "" }: { className?: string }) {
 
     // Paint immediately (two frames, so trails exist) rather than waiting for
     // the first animation frame, which never comes in a background tab.
-    draw(cv, flock, 0, mono);
-    draw(cv, flock, 0.016, mono);
+    draw(cv, flock, 0, mono, outlier);
+    draw(cv, flock, 0.016, mono, outlier);
     const loop = (now: number) => {
-      if (visible) draw(cv, flock, (now - t0) / 1000, mono);
+      if (visible) draw(cv, flock, (now - t0) / 1000, mono, outlier);
       raf = requestAnimationFrame(loop);
     };
     raf = requestAnimationFrame(loop);
@@ -249,7 +253,7 @@ export function FlockCanvas({ className = "" }: { className?: string }) {
       cancelAnimationFrame(raf);
       io.disconnect();
     };
-  }, []);
+  }, [outlier]);
 
   return <canvas ref={ref} aria-hidden="true" className={className} />;
 }

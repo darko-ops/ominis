@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import { ContactCard } from "@/components/ContactCard";
 import { FlockCanvas } from "@/components/Flock";
 import { TraceDemo } from "@/components/TraceDemo";
@@ -52,9 +54,14 @@ export default function Home() {
       <section className="relative h-svh min-h-[640px] overflow-hidden" aria-labelledby="hero-title">
         <FlockCanvas className="absolute inset-0 block h-full w-full" />
         <header className="relative flex items-center justify-between px-5 py-6 sm:px-12 sm:py-7">
-          <a href="#" className="text-[22px] font-medium tracking-[-0.02em]">
-            omi
-          </a>
+          <span className="flex items-baseline gap-2">
+            <a href="#" className="text-[22px] font-medium tracking-[-0.02em]">
+              omi
+            </a>
+            <Link href="/ominis" className="text-xs text-fg-faint transition-colors hover:text-fg">
+              by ominis
+            </Link>
+          </span>
           <nav aria-label="Main" className="flex gap-5 text-sm sm:gap-8">
             {NAV.map((n) => (
               <a key={n.label} href={n.href} className={`hover:text-fg-faint ${n.label === "Evaluation" ? "hidden sm:inline" : ""}`}>
