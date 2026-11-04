@@ -46,8 +46,14 @@ export default function Ominis() {
         </Link>
       </div>
       <div className="absolute inset-x-5 bottom-8 flex justify-between gap-4 font-mono text-[11px] text-[#555] sm:inset-x-12 sm:text-xs">
-        <span>exploration through intuition</span>
-        <span className="text-right">ominis</span>
+        <span className="leading-snug">
+          exploration
+          <br />
+          through
+          <br />
+          intuition
+        </span>
+        <span className="self-end text-right">ominis</span>
       </div>
       <p className="sr-only">Illustration: thousands of agent actions moving together as one flock.</p>
     </section>
