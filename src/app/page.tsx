@@ -4,14 +4,12 @@ import { ContactCard } from "@/components/ContactCard";
 import { FlockCanvas } from "@/components/Flock";
 import { TraceDemo } from "@/components/TraceDemo";
 
-const REPO = "https://github.com/darko-ops/omi";
-const SPEC = `${REPO}#readme`;
+const RESEARCH = "/research";
 
 const NAV = [
   { label: "Model", href: "#model" },
   { label: "Evaluation", href: "#evaluation" },
-  { label: "Spec", href: SPEC },
-  { label: "GitHub", href: REPO },
+  { label: "Research", href: RESEARCH },
 ];
 
 const QUESTIONS = [
@@ -77,9 +75,9 @@ export default function Home() {
           <p className="max-w-[430px] text-[17px] leading-normal text-pretty text-fg-muted">
             A small model that watches your coding agent and flags the actions that don&apos;t belong.
           </p>
-          <a href={SPEC} className="rounded-full bg-fg px-[22px] py-[13px] text-[15px] text-bg transition-colors hover:bg-[#333]">
-            Read the spec
-          </a>
+          <Link href={RESEARCH} className="rounded-full bg-fg px-[22px] py-[13px] text-[15px] text-bg transition-colors hover:bg-[#333]">
+            Read the research
+          </Link>
         </div>
         <div className="absolute inset-x-5 bottom-8 flex justify-between gap-4 font-mono text-[11px] text-[#555] sm:inset-x-12 sm:text-xs">
           <span>p(side task) per action</span>
@@ -165,11 +163,11 @@ export default function Home() {
                 and how detection holds as an attack is spread over more steps.
               </p>
               <p className="mt-4 max-w-xl text-[17px] leading-relaxed text-fg-muted">
-                The code is public now. Results will be published as they land, including where it fails.
+                Results will be published as they land, including where it fails.
               </p>
-              <a href={REPO} className="mt-7 inline-block font-mono text-sm underline decoration-line-strong underline-offset-4 hover:decoration-fg">
-                github.com/darko-ops/omi
-              </a>
+              <Link href={RESEARCH} className="mt-7 inline-block font-mono text-sm underline decoration-line-strong underline-offset-4 hover:decoration-fg">
+                read the research note
+              </Link>
             </div>
             <dl className="glass grid grid-cols-2 overflow-hidden rounded-2xl [&>div:nth-child(-n+2)]:border-b [&>div:nth-child(odd)]:border-r [&>div]:border-line/70">
               {[
@@ -209,12 +207,9 @@ export default function Home() {
             <span className="font-sans text-base font-medium tracking-[-0.02em] text-fg">omi</span> · every step, judged
           </span>
           <span className="flex gap-6">
-            <a href={SPEC} className="hover:text-fg">
-              spec
-            </a>
-            <a href={REPO} className="hover:text-fg">
-              github
-            </a>
+            <Link href={RESEARCH} className="hover:text-fg">
+              research
+            </Link>
             <a href="#partners" className="hover:text-fg">
               contact
             </a>
