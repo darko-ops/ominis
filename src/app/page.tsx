@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import { ContactCard } from "@/components/ContactCard";
 import { FlockCanvas } from "@/components/Flock";
+import { StringFlock } from "@/components/StringFlock";
 import { TraceDemo } from "@/components/TraceDemo";
 
 const RESEARCH = "/research";
@@ -135,9 +136,14 @@ export default function Home() {
           </div>
         </section>
 
+        {/* String murmuration: a braided ribbon of actions flowing into the Design section */}
+        <section aria-hidden="true" className="relative h-[300px] overflow-hidden border-t border-line bg-bg-sunken">
+          <StringFlock className="absolute inset-0 block h-full w-full [mask-image:linear-gradient(90deg,transparent,#000_9%,#000_91%,transparent)]" />
+        </section>
+
         {/* Principles */}
-        <section className="border-t border-line bg-bg-sunken">
-          <div className="mx-auto max-w-6xl px-5 py-20 sm:px-12 sm:py-28">
+        <section className="bg-bg-sunken">
+          <div className="mx-auto max-w-6xl px-5 pt-6 pb-20 sm:px-12 sm:pb-28">
             <Label>design</Label>
             <h2 className="mt-3 max-w-2xl text-3xl leading-tight font-medium tracking-[-0.03em] sm:text-[40px]">Small enough to run everywhere. Hard to talk around.</h2>
             <div className="mt-12 grid gap-x-12 gap-y-10 sm:grid-cols-2">
